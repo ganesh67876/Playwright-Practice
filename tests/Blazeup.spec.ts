@@ -2,6 +2,7 @@ import {test, expect} from '@playwright/test';
 
 test("duplicate value dropdown", async ({page})=>{
     await page.goto("https://terralogic.blazeup.ai/login/")
+    // this is to check pull request
 
     await page.getByText('Mobile number or email').fill("saiganesh.g@terralogic.com")
     await page.getByRole('button', { name: 'Proceed' }).click()
