@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Drawer Fixture</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 40px; }
+      .card { padding: 20px; border: 1px solid #ddd; border-radius: 8px; width: 320px; }
+      button { padding: 10px 14px; margin-top: 12px; cursor: pointer; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h6>Create New Drawer</h6>
+      <button id="createDrawerBtn" type="button">Create New Drawer</button>
+      <p id="status">Waiting for action</p>
+    </div>
+
+    <script>
+      const btn = document.getElementById('createDrawerBtn');
+      const status = document.getElementById('status');
+      btn.addEventListener('click', () => {
+        status.textContent = 'Drawer created';
+      });
+    </script>
+  </body>
+</html>
