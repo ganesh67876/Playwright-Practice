@@ -200,7 +200,7 @@ test('Keyboard Actions10', async({page})=>{
 
 })
 
-test.only('Keyboard Actions12', async({page})=>{
+test('Keyboard Actions12', async({page})=>{
 
 
 
