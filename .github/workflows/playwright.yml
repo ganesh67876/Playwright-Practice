@@ -1,7 +1,7 @@
 name: Playwright Tests
 on:
   push:
-    branches: [ stg ]
+    branches: [ main, master, feature/playwright-ci-test ]
   pull_request:
     branches: [ main, master ]
 jobs:
