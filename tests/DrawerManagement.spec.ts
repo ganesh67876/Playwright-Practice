@@ -1,32 +1,36 @@
-import { test, expect} from '@playwright/test';
+import { test, expect } from '../fixtures/testBase';
 
-test("Verify Drawer Management",async({page})=>{
+test('Verify Drawer Management', async ({ page, appPage }) => {
+    const drawerName = `GaneshDrawer_${Date.now()}`;
+    await page.goto('https://stgclickscan.terralogic.com/drawer-management');
+    await page.getByRole('button', { name: /Create New Drawer/i }).click({ force: true });
+    await page.getByPlaceholder('Enter drawer name').fill(drawerName);
 
-    await page.goto("https://clickscan.terralogic.com/drawer-management");
+    const fieldName = page.getByPlaceholder('e.g., Document ID, Customer Name');
+    await fieldName.fill('First_Name');
+    await page.getByLabel('WIDTH').fill('100');
+    await page.getByRole('button', { name: 'Insert Field' }).click({ force: true });
 
-    await page.locator("//input[contains(@id,'username')]").fill("Gysg");
-    await page.locator("//input[contains(@id,'password')]").fill("Sai123*#");
-    await page.locator("//button[contains(@class,'btn') and text()='Sign in']").click();
-    await expect(page.getByText(/Dashboard/i)).toBeVisible();
-    await page.locator("//h6[contains(text(),'Create New Drawer')]").click();
-    await page.locator("//input[contains(@id,'drawerName')]").fill("Ganesh1234");
-    await page.locator("//label[@for='fieldName']/following-sibling::input").fill("First_Name");
-    await page.locator("//input[contains(@id,'width')]").fill("100");
-    await page.getByRole('button', { name: 'Insert Field' }).click();
-    const keyReferenceCheckbox = await page.locator("//input[contains(@type,'checkbox')]");
-    const count = await keyReferenceCheckbox.count();
-    for(let i=0; i<count; i++){
-        await keyReferenceCheckbox.nth(i).check();
-        await expect(keyReferenceCheckbox.nth(i)).toBeChecked();
-    }
+    const keyReferenceCheckbox = page.getByRole('checkbox', { name: 'Key Reference' });
+    await keyReferenceCheckbox.check();
     await expect(keyReferenceCheckbox).toBeChecked();
-    await page.locator("//label[@for='fieldName']/following-sibling::input").fill("Last_Name");
-    await page.locator("//input[contains(@id,'width')]").fill("100");
-    await page.getByRole('button', { name: 'Insert Field' }).click();
-    await page.locator("//label[@for='fieldName']/following-sibling::input").fill("SSN");
-    await page.locator("//input[contains(@id,'width')]").fill("100");
-    await page.getByRole('button', { name: 'Insert Field' }).click();
-    await page.getByRole('button', { name: 'Save Drawer' }).click();
-    await page.waitForTimeout(100000);
-   
+
+    await fieldName.fill('Last_Name');
+    await page.getByLabel('WIDTH').fill('100');
+    await page.getByRole('button', { name: 'Insert Field' }).click({ force: true });
+
+    await fieldName.fill('SSN');
+    await page.getByLabel('WIDTH').fill('100');
+    await page.getByRole('button', { name: 'Insert Field' }).click({ force: true });
+
+    await page.getByRole('button', { name: 'Save Drawer' }).click({ force: true });
+
+    const yesButton = page.getByRole('button', { name: /^Yes$/i });
+    if (await yesButton.count()) {
+        await yesButton.click({ force: true });
+    }
+
+    await expect.poll(async () => {
+        return (await page.locator('body').innerText()).toLowerCase();
+    }, { timeout: 30000 }).toContain(drawerName.toLowerCase());
 });
