@@ -1,18 +1,18 @@
-import{test,expect} from "@playwright/test";
+import { test, expect } from '../fixtures/testBase';
 
-test("User Management",async({page})=>{
-     await page.goto("https://clickscan.terralogic.com/user-management");
-     
-     await page.locator("//input[contains(@name,'username')]").fill("Gysg");
-await page.locator("//input[contains(@name,'password')]").fill("Sai123*#");
-await page.locator("//button[contains(text(),'Sign in')]").click();
+test('User Management', async ({ page, appPage }) => {
+    await page.goto('https://stgclickscan.terralogic.com/user-management');
+    await page.getByRole('button', { name: /Create New User/i }).click({ force: true });
 
-await expect(page.getByText(/Dashboard/i)).toBeVisible();
+    const username = `Gysg${Date.now().toString().slice(-4)}`;
+    const email = `${username}@gmail.com`;
 
-await page.locator("//h6[contains(text(),'Create New User')]").click();
+    await page.getByRole('textbox', { name: /Username/i }).fill(username);
+    await page.getByRole('textbox', { name: /Email/i }).fill(email);
 
-await page.locator("//input[contains(@id,'Username')]").fill("Gysg1");
-await page.locator("//input[contains(@id,'Email')]").fill("Gysg@gmail.com");
+    await page.getByRole('button', { name: /Create User/i }).click({ force: true });
 
-await page.getByRole('button', { name: 'Create User' }).click();
+    await expect.poll(async () => {
+        return (await page.locator('body').innerText()).toLowerCase();
+    }, { timeout: 25000 }).toContain(username.toLowerCase());
 });
